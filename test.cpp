@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cassert>
-#include "optopenhash/elastic_hashing.h"  // Assuming header file for ElasticHashTable
-#include "optopenhash/funnel_hashing.h"   // Assuming header file for FunnelHashTable
+#include "elastic_hashing.h"  // Assuming header file for ElasticHashTable
+#include "funnel_hashing.h"   // Assuming header file for FunnelHashTable
 
 void test_elastic_hash_table() {
     int capacity = 1000;
@@ -17,7 +17,7 @@ void test_elastic_hash_table() {
         auto result = et.search("key" + std::to_string(i));
         
         if (*result != i) {
-            std::cout << "Expected: value" + std::to_string(i) << ", but got: " << *result << std::endl;
+            std::cout << "Expected: value \"" + std::to_string(i) << "\", but got: " << *result << std::endl;
         }
         
         assert(result && *result == i);
@@ -49,7 +49,7 @@ void test_funnel_hash_table() {
 
 int main() {
     test_elastic_hash_table();
-    
+
     test_funnel_hash_table();
     return 0;
 }

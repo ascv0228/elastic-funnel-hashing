@@ -18,8 +18,10 @@ int ElasticHashTable::_quad_probe(const std::string &key, int level, int j, int 
 }
 
 ElasticHashTable::ElasticHashTable(int capacity, double delta) {
-    if (capacity <= 0) throw std::invalid_argument("Capacity must be positive.");
-    if (!(0 < delta && delta < 1)) throw std::invalid_argument("Delta must be between 0 and 1.");
+    if (capacity <= 0) 
+        throw std::invalid_argument("Capacity must be positive.");
+    if (!(0 < delta && delta < 1)) 
+        throw std::invalid_argument("Delta must be between 0 and 1.");
     this->capacity = capacity;
     this->delta = delta;
     num_inserts = 0;
@@ -36,7 +38,8 @@ ElasticHashTable::ElasticHashTable(int capacity, double delta) {
     }
     sizes.push_back(remaining);
     
-    for (int s : sizes) levels.emplace_back(s);
+    for (int s : sizes) 
+        levels.emplace_back(s);
     occupancies.resize(num_levels, 0);
     
     std::random_device rd;
@@ -48,7 +51,8 @@ ElasticHashTable::ElasticHashTable(int capacity, double delta) {
     }
 }
 bool ElasticHashTable::insert(const std::string &key, const int &value) {
-    if (num_inserts >= max_inserts) throw std::runtime_error("Hash table is full.");
+    if (this->num_inserts >= this->max_inserts) 
+        throw std::runtime_error("Hash table is full.");
     
     for (size_t i = 0; i < levels.size(); ++i) {
         auto &level = levels[i];
@@ -60,6 +64,7 @@ bool ElasticHashTable::insert(const std::string &key, const int &value) {
             load > 0 ? std::log2(1 / load) : 0, 
             std::log2(1 / delta)))
         );
+
         if (i < levels.size() - 1) {
             auto& next_level = levels[i + 1];
             int next_occ = occupancies[i + 1];
@@ -80,7 +85,7 @@ bool ElasticHashTable::insert(const std::string &key, const int &value) {
             } else if (load <= (delta / 2)) {
                 continue;
             } else if (load_next <= threshold) {
-                for (int j = 0; j < probe_limit; ++j) {
+                for (int j = 0; j < size; ++j) {
                     int idx = _quad_probe(key, i, j, size);
                     if (!level[idx].occupied) {
                         level[idx] = {key, value, true};
@@ -91,7 +96,7 @@ bool ElasticHashTable::insert(const std::string &key, const int &value) {
                 }
             }
         } else {
-            for (int j = 0; j < probe_limit; ++j) {
+            for (int j = 0; j < size; ++j) {
                 int idx = _quad_probe(key, i, j, size);
                 if (!level[idx].occupied) {
                     level[idx] = {key, value, true};
@@ -114,7 +119,9 @@ std::optional<int> ElasticHashTable::search(const std::string &key) {
         for (int j = 0; j < size; ++j) {
             int idx = _quad_probe(key, i, j, size);
             if (!level[idx].occupied) break;
-            if (level[idx].key == key) return level[idx].value;
+            if (level[idx].key == key) {
+                return level[idx].value;
+            }
         }
     }
     return std::nullopt;
@@ -125,5 +132,5 @@ bool ElasticHashTable::contains(const std::string &key) {
 }
 
 int ElasticHashTable::size() const {
-    return num_inserts;
+    return this->num_inserts;
 }
