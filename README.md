@@ -9,8 +9,8 @@ g++ -o test test.cpp optopenhash/elastic_hashing.cpp optopenhash/funnel_hashing.
 ./test.exe
 ```
 
-=====================
-參考: 
+
+# 參考: 
 [optopenhash](https://github.com/sternma/optopenhash)
 [mason276752](https://gist.github.com/mason276752/001b5c5eab686ef85b61ef04bcc46551)
 
