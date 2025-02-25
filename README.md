@@ -1,4 +1,6 @@
-# optopenhash_cpp
+# OptOpenHash in cpp
+
+## Compile Method
 
 ```bash
 g++ -c src/elastic_hashing.cpp -o elastic_hashing.o -std=c++17
@@ -15,13 +17,18 @@ CMake:
 mkdir build && cd build && cmake .. && cmake --build .. && ./bin/test
 ```
 
-# 参考: 
+# References
+
+> **Optimal Bounds for Open Addressing Without Reordering**
+> Martín Farach‐Colton, Andrew Krapivin, William Kuszmaul
+> [Link](https://arxiv.org/pdf/2501.02305)
 
 - [optopenhash](https://github.com/sternma/optopenhash)
 - [mason276752](https://gist.github.com/mason276752/001b5c5eab686ef85b61ef04bcc46551)
+- [elastic-funnel-hashing](https://github.com/ascv0228/elastic-funnel-hashing)
 
 
-# HINT: 不知道為甚麼 elastic_hashing 的測試一直錯
+# HINT
 
 对于 Elastic Hash 的 string - string 类型，仅通过 `capacity = 1000`, `delta=0.1` 的场景，而当仅修改 `capcity = 100` 时则会随机出现错误……
 

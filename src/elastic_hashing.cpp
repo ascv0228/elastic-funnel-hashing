@@ -9,57 +9,22 @@
 #include <type_traits>
 #include "elastic_hashing.h"
 
-// 自定义哈希函数对象
-// template <typename T>
-// struct hash_combine {
-//     std::size_t operator()(const T& val) const {
-//         return std::hash<T>()(val);
-//     }
-// };
 
-// template <typename T, typename... Rest>
-// struct hash_combine<std::tuple<T, Rest...>> {
-//     std::size_t operator()(const std::tuple<T, Rest...>& t) const {
-//         std::size_t seed = hash_combine<T>()(std::get<0>(t));
-//         hash_combine_impl(seed, t, std::index_sequence_for<Rest...>{});
-//         return seed;
-//     }
-
-// private:
-//     template <typename Tuple, std::size_t... Is>
-//     void hash_combine_impl(std::size_t& seed, const Tuple& t, std::index_sequence<Is...>) const {
-//         (..., (seed ^= hash_combine<std::tuple_element_t<Is + 1, Tuple>>()(std::get<Is + 1>(t)) + 0x9e3779b9 + (seed << 6) + (seed >> 2)));
-//     }
-// };
+// 重载operator[]返回代理对象
 
 
-// 辅助函数：检测单个元素是否为默认值
-// template <typename T>
-// bool is_default(const T& value) {
-//     // if constexpr (std::is_same_v<T, std::string>) {
-//     //     return value.empty(); // 检测字符串是否为空
-//     // }
-//     return value == T{}; // 检测是否为默认值
-// }
+// 对于字面量类型（如int）需要右值重载
 
-// 递归模板：检测 tuple 中所有元素是否为默认值
-// template <size_t Index = 0, typename... Types>
-// bool is_tuple_default(const std::tuple<Types...>& t) {
-//     if constexpr (Index == sizeof...(Types)) {
-//         return true; // 递归结束，所有元素都是默认值
-//     } else {
-//         return is_default(std::get<Index>(t)) && is_tuple_default<Index + 1>(t); // 递归检测下一个元素
-//     }
-// }
 
 template <class KT, class VT>
 int ElasticHashTable<KT, VT>::_hash(const KT &key, int level) const {
-    // hash_combine<std::tuple<KT, int>> hasher;
     std::hash<KT> hasher;
     return (hasher(key) ^ salts[level]) & 0x7FFFFFFF;
-    // return hasher(std::make_tuple(key, salts[level])) & 0x7FFFFFFF;
 }
 
+/**
+ * @return The index for the j-th quadratic probe.
+ */
 template <class KT, class VT>
 int ElasticHashTable<KT, VT>::_quad_probe(const KT &key, int level, int j, int table_size) const {
     return (_hash(key, level) + j * j) % table_size;
@@ -143,6 +108,7 @@ bool ElasticHashTable<KT, VT>::insert(const KT &key, const VT &value) {
             static_cast<int>(
                 c * 
                 std::min(
+                    // load > 0 ? std::pow(std::log2(1 / load), 2) : 0,
                     load > 0 ? std::log2(1 / load) : 0, 
                     std::log2(1 / delta)
                 )
@@ -168,6 +134,17 @@ bool ElasticHashTable<KT, VT>::insert(const KT &key, const VT &value) {
                         return true;
                     }
                 }
+
+                // for (int j = 0; j < size; ++j) {
+                //     int idx = _quad_probe(key, i, j, size);
+                //     if (!level[idx].occupied) {
+                //         level[idx] = {key, value, true};
+                //         ++occupancies[i];
+                //         ++num_inserts;
+                //         return true;
+                //     }
+                // }
+
             } else if (load <= (delta / 2)) {
                 continue;
             } else if (load_next <= threshold) {
@@ -194,7 +171,7 @@ bool ElasticHashTable<KT, VT>::insert(const KT &key, const VT &value) {
         }
     }
     std::cout << key << " " << value << " " << "Failed" << "\n";
-    return false;
+    throw std::runtime_error("Insertion failed in all levels; hash table is full.");
 }
 
 // template <class KT, class VT>
@@ -219,7 +196,9 @@ std::optional<VT> ElasticHashTable<KT, VT>::search(const KT &key) {
         
         for (int j = 0; j < size; ++j) {
             int idx = _quad_probe(key, i, j, size);
-            if (!level[idx].occupied) break;
+            if (!level[idx].occupied) {
+                break;
+            }
             if (level[idx].key == key) {
                 return level[idx].value;
             }

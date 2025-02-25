@@ -8,26 +8,27 @@
 #include <unordered_map>
 #include "funnel_hashing.h"
 
-template <typename KT, typename VT>
+template <class KT, class VT>
 int FunnelHashTable<KT, VT>::_hash(const KT &key, int salt) const {
     std::hash<KT> hasher;
     return (hasher(key) ^ salt) & 0x7FFFFFFF;
 }
 
-template <typename KT, typename VT>
+template <class KT, class VT>
 int FunnelHashTable<KT, VT>::_hash_level(const KT &key, int level_index) const {
     return _hash(key, level_salts[level_index]);
 }
 
-template <typename KT, typename VT>
+template <class KT, class VT>
 int FunnelHashTable<KT, VT>::_hash_special(const KT &key) const {
     return _hash(key, special_salt);
 }
 
-template <typename KT, typename VT>
+template <class KT, class VT>
 FunnelHashTable<KT, VT>::FunnelHashTable(int capacity, double delta) {
     if (capacity <= 0) 
         throw std::invalid_argument("Capacity must be positive.");
+    
     if (!(0 < delta && delta < 1)) 
         throw std::invalid_argument("Delta must be between 0 and 1.");
     
@@ -35,8 +36,6 @@ FunnelHashTable<KT, VT>::FunnelHashTable(int capacity, double delta) {
     this->delta = delta;
     this->max_inserts = capacity - static_cast<int>(delta * capacity);
     this->num_inserts = 0;
-    
-
     
     this->alpha = static_cast<int>(std::ceil(4 * std::log2(1 / delta) + 10));
     this->beta = static_cast<int>(std::ceil(2 * std::log2(1 / delta)));
@@ -75,7 +74,7 @@ FunnelHashTable<KT, VT>::FunnelHashTable(int capacity, double delta) {
     this->special_occupancy = 0;
 }
 
-template <typename KT, typename VT>
+template <class KT, class VT>
 bool FunnelHashTable<KT, VT>::insert(const KT &key, const VT &value) {
     if (num_inserts >= max_inserts) {
         throw std::runtime_error("Hash table is full (maximum allowd insertions reached).");
@@ -133,7 +132,7 @@ bool FunnelHashTable<KT, VT>::insert(const KT &key, const VT &value) {
     throw std::runtime_error("Special array insertion failed; table is full.");
 }
 
-template <typename KT, typename VT>
+template <class KT, class VT>
 std::optional<VT> FunnelHashTable<KT, VT>::search(const KT &key) {
     for (size_t i = 0; i < levels.size(); ++i) {
         auto &level = levels[i];
@@ -178,12 +177,12 @@ std::optional<VT> FunnelHashTable<KT, VT>::search(const KT &key) {
     return std::nullopt;
 }
 
-template <typename KT, typename VT>
+template <class KT, class VT>
 bool FunnelHashTable<KT, VT>::contains(const KT &key) {
     return search(key).has_value();
 }
 
-template <typename KT, typename VT>
+template <class KT, class VT>
 int FunnelHashTable<KT, VT>::size() const {
     return this->num_inserts;
 }
