@@ -5,11 +5,12 @@
 #include <vector>
 #include <optional>
 
+template <typename KT, typename VT>
 class FunnelHashTable {
 private:
     struct Entry {
-        std::string key;
-        int value;
+        KT key;
+        VT value;
         bool occupied = false;
     };
     int capacity;
@@ -25,16 +26,17 @@ private:
     int special_salt;
     int special_occupancy;
 
-    int _hash(const std::string &key, int salt) const;
-    int _hash_level(const std::string &key, int level_index) const;
-    int _hash_special(const std::string &key) const;
+    int _hash(const KT &key, int salt) const;
+    int _hash_level(const KT &key, int level_index) const;
+    int _hash_special(const KT &key) const;
 
 public:
     FunnelHashTable(int capacity, double delta = 0.1);
-    bool insert(const std::string &key, const int &value);
-    std::optional<int> search(const std::string &key);
-    bool contains(const std::string &key);
+    bool insert(const KT &key, const VT &value);
+    std::optional<VT> search(const KT &key);
+    bool contains(const KT &key);
     int size() const;
+    void print();
 };
 
 #endif // FUNNEL_HASHING_H

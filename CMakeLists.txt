@@ -3,8 +3,13 @@ cmake_minimum_required(VERSION 3.10)
 
 # Define the project name and the C++ standard
 project(MyProject CXX)
+# set(CMAKE_CXX_COMPILER "C:/MinGW/mingw64/bin/g++.exe")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# set(CMAKE SYSTEM NAME Windows)
+# set(CMAKE SYSTEM PROCESSOR x86 64)
+# set(CMAKE CXX COMPILER "g++")
+# set(CMAKE MAKE PROGRAM "mingw64-make")
 
 # Add the include directory (assuming the header file is in the 'include' directory)
 include_directories(${CMAKE_SOURCE_DIR}/include)
