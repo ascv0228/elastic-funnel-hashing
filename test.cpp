@@ -15,8 +15,6 @@ void test_elastic_hash_table() {
         et_si.insert("key" + std::to_string(i), i);
         et_ss.insert("key" + std::to_string(i), "value" + std::to_string(i));
     }
-
-    // et_ss.print();
     
     for (int i = 0; i < n_insert; ++i) {        
         auto res_si = et_si.search("key" + std::to_string(i));
