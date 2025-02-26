@@ -5,7 +5,7 @@ g++ -c src/elastic_hashing.cpp -o elastic_hashing.o -std=c++17
 g++ -c src/funnel_hashing.cpp -o funnel_hashing.o -std=c++17
 g++ -c test.cpp -o test.o -std=c++17
 
-g++ -o test test.cpp optopenhash/elastic_hashing.cpp optopenhash/funnel_hashing.cpp -std=c++17
+g++ -o test test.cpp src/elastic_hashing.cpp src/funnel_hashing.cpp -std=c++17
 ./test.exe
 ```
 
