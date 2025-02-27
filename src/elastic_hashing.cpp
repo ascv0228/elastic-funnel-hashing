@@ -80,7 +80,7 @@ bool ElasticHashTable::insert(const std::string &key, const int &value) {
             } else if (load <= (delta / 2)) {
                 continue;
             } else if (load_next <= threshold) {
-                for (int j = 0; j < probe_limit; ++j) {
+                for (int j = 0; j < size; ++j) {
                     int idx = _quad_probe(key, i, j, size);
                     if (!level[idx].occupied) {
                         level[idx] = {key, value, true};
@@ -91,7 +91,7 @@ bool ElasticHashTable::insert(const std::string &key, const int &value) {
                 }
             }
         } else {
-            for (int j = 0; j < probe_limit; ++j) {
+            for (int j = 0; j < size; ++j) {
                 int idx = _quad_probe(key, i, j, size);
                 if (!level[idx].occupied) {
                     level[idx] = {key, value, true};

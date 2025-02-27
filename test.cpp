@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cassert>
-#include "optopenhash/elastic_hashing.h"  // Assuming header file for ElasticHashTable
-#include "optopenhash/funnel_hashing.h"   // Assuming header file for FunnelHashTable
+#include "src/elastic_hashing.h"  // Assuming header file for ElasticHashTable
+#include "src/funnel_hashing.h"   // Assuming header file for FunnelHashTable
 
 void test_elastic_hash_table() {
     int capacity = 1000;

@@ -12,8 +12,11 @@ g++ -o test test.cpp src/elastic_hashing.cpp src/funnel_hashing.cpp -std=c++17
 
 # 參考: 
 [optopenhash](https://github.com/sternma/optopenhash)
+
 [mason276752](https://gist.github.com/mason276752/001b5c5eab686ef85b61ef04bcc46551)
 
 
-# HINT: 不知道為甚麼 elastic_hashing 的測試一直錯
+# HINT: 
+~~不知道為甚麼 elastic_hashing 的測試一直錯~~
 
+thank [xyz-whu-coder](https://github.com/xyz-whu-coder/optopenhash-cpp/commit/a7e5564583396cc4610b437d0a4bd3dc67ad59fc)
